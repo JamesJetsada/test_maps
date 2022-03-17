@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:longdo_maps_flutter/longdo_maps_flutter.dart';
 
 class Layer extends StatelessWidget {
   @override
@@ -12,7 +11,7 @@ class Layer extends StatelessWidget {
             return ListTile(
                 title: Text(_title(i).toString()),
                 onTap: () {
-                  Navigator.pop(context, _value(i));
+                  // Navigator.pop(context, _value(i));
                 });
           },
           separatorBuilder: (_, __) => Divider(),
@@ -31,14 +30,14 @@ class Layer extends StatelessWidget {
     }
   }
 
-  String? _value(i) {
-    switch (i) {
-      case 0:
-        return Layers.LAYER_THAICHOTE;
-      case 1:
-        return Layers.LAYER_TRAFFIC;
-      default:
-        return null;
-    }
-  }
+  // String? _value(i) {
+  //   switch (i) {
+  //     case 0:
+  //       return Layers.LAYER_THAICHOTE;
+  //     case 1:
+  //       return Layers.LAYER_TRAFFIC;
+  //     default:
+  //       return null;
+  //   }
+  // }
 }

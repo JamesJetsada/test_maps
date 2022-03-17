@@ -10,7 +10,7 @@ Future<dynamic> get(BuildContext context, String api, dynamic params) async {
   dio.options.responseType = ResponseType.json;
   dio.options.followRedirects = false;
   dio.options.validateStatus = (status) {
-    return status < 500;
+    return status! < 500;
   };
   var response = await dio.get(api, queryParameters: params);
   print(response.statusCode);
@@ -36,7 +36,7 @@ Future<dynamic> delete(BuildContext context, String api, dynamic params) async {
   dio.options.responseType = ResponseType.json;
   dio.options.followRedirects = false;
   dio.options.validateStatus = (status) {
-    return status < 500;
+    return status! < 500;
   };
   var response = await dio.delete(api, queryParameters: params);
   print(response.statusCode);
@@ -54,7 +54,7 @@ Future<dynamic> put(BuildContext context, String api, dynamic params) async {
     dio.options.responseType = ResponseType.json;
     dio.options.followRedirects = false;
     dio.options.validateStatus = (status) {
-      return status < 500;
+      return status! < 500;
     };
     var response = await dio.put(api, queryParameters: params);
     print(response.statusCode);
@@ -77,7 +77,7 @@ Future<dynamic> post(BuildContext context, String api, dynamic params) async {
     dio.options.responseType = ResponseType.json;
     dio.options.followRedirects = false;
     dio.options.validateStatus = (status) {
-      return status < 500;
+      return status! < 500;
     };
     var response = await dio.post(api, data: params);
     print(response.statusCode);
@@ -108,7 +108,7 @@ Future<dynamic> login(BuildContext context, dynamic params) async {
     dio.options.responseType = ResponseType.json;
     dio.options.followRedirects = false;
     dio.options.validateStatus = (status) {
-      return status < 500;
+      return status! < 500;
     };
     // dio.options.contentType = token;
     var response = await dio.post('login', data: params);
