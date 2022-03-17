@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:ffi';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:location/location.dart';
 
 import 'package:longdo_maps_api3_flutter/longdo_maps_api3_flutter.dart';
+import 'package:test_maps/model/route_model_response.dart';
 
 void main() {
   runApp(MyApp());
@@ -35,9 +37,13 @@ class _MyAppState extends State<MyApp> {
   dynamic _maxLat;
   dynamic _rotate;
   dynamic _pitch;
+  RouteModelResponse? _modelResponse;
+
+  Dio dio = Dio();
 
   Location location = Location();
   LocationData? _location;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -62,21 +68,37 @@ class _MyAppState extends State<MyApp> {
         if (_location != null) {
           print('latitude : ${_location?.latitude}');
           print('longitude : ${_location?.longitude}');
-          // map.currentWidget.createElement()
-          // map.currentContext.
-          // map.currentState?.objectCall();
-          // map.currentState?.call("Overlays.pathAnimation",[
-          //    "Marker.move",
-          //   {"marker" : "Marker"},
-          //   {"lon": _location?.longitude, "lat": _location?.latitude},
+          // map.currentState?.call("Overlays.add", [
+          //   testaddmarker!,
           // ]);
-          // map.currentState?.objectCall("Marker.move", [
-          //   {"lon": _location?.longitude, "lat": _location?.latitude},
-          // ]);
+          setmarker(_location?.latitude, _location?.longitude);
           setState(() {});
         }
       });
     }
+  }
+
+  setmarker(double? lat, lon) {
+    print(lat);
+    print(lon);
+    Object? test = map.currentState?.object(
+      "Marker1",
+      "11",
+      [
+        {"lon": lon, "lat": lat},
+        {
+          "detail": "Edit !!!!!!!!",
+          "icon": {
+            "url": "https://cdn-icons-png.flaticon.com/512/1249/1249927.png",
+            "size": {"width": 30, "height": 30},
+            'offset': {'x': 15, 'y': 15},
+          },
+        },
+      ],
+    );
+    map.currentState?.call("Overlays.add", [
+      test!,
+    ]);
   }
 
   @override
@@ -85,13 +107,13 @@ class _MyAppState extends State<MyApp> {
       "Marker",
       "1",
       [
-        {"lon": 102.83843421961487, "lat": 16.510321623038923},
+        {"lon": _location?.longitude, "lat": _location?.latitude},
         {
           "detail": "Edit !!!!!!!!",
           "icon": {
             "url": "https://cdn-icons-png.flaticon.com/512/1249/1249927.png",
             "size": {"width": 30, "height": 30},
-            'offset': {'x': 15, 'y': 15},
+            // 'offset': {'x': 15, 'y': 15},
           },
         },
       ],
@@ -671,7 +693,7 @@ class _MyAppState extends State<MyApp> {
               right: 10,
               child: ElevatedButton(
                   onPressed: () async {
-                    gotolocation();
+                    // gotolocation();
                     print(marker);
                     setState(() {
                       marker;
@@ -680,8 +702,8 @@ class _MyAppState extends State<MyApp> {
                       zoom().then((value) {
                         map.currentState?.call("location", [
                           {
-                            "lon": 102.83843421961487,
-                            "lat": 16.510321623038923,
+                            "lon": _location?.longitude,
+                            "lat": _location?.latitude
                           },
                         ]);
                       });
@@ -694,35 +716,22 @@ class _MyAppState extends State<MyApp> {
                   child: Text('ปักหมุด')),
             ),
             Positioned(
-              // padding: const EdgeInsets.all(8.0),
               bottom: 30,
               left: 10,
               child: ElevatedButton(
                   onPressed: () async {
-                    // gotolocation();
-                    // print(marker);
-                    // setState(() {
-                    //   marker;
-                    // });
                     if (marker != null) {
-                      // map.Route.placeholder(document.getElementById('result'));
-                      // map.currentState?.call("Route.placeholder");
-                      //map.Route.placeholder(document.getElementById('result'));
-                      //Map({placeholder: document.getElementById('map')});
-                      // map.currentWidget?.createElement();
-                      map.currentContext?.describeElement("document.getElementById('result')");
+                      map.currentContext?.describeElement(
+                          "document.getElementById('result')");
                       print('1111111111111111111111111111111');
-                      // map.currentState?.call("Route.placeholder", [
-                      //   {"document.getElementById": "result"}
-                      // ]);
                       map.currentState?.call("Route", [
                         {"placeholder": "document.getElementById('map')"}
                       ]);
                       print('2222222222222222222222222222222');
                       map.currentState?.call("Route.add", [
                         {
-                          "lon": 102.83914888516223,
-                          "lat": 16.510553891600814,
+                          "lon": _location?.longitude,
+                          "lat": _location?.latitude
                         },
                       ]);
                       print('3333333333333333333333333333333');
@@ -732,74 +741,41 @@ class _MyAppState extends State<MyApp> {
                           "lat": 16.466249511152856,
                         },
                       ]);
-                      map.currentState?.call("Route.search");
+                     map.currentState?.call("Route.search");
+                    
+                    //https://apix.longdo.com/RouteService/geojson/route?flon=102.8385119&flat=16.5105536&tlon=102.83122731601415&tlat=16.466249511152856&mode=t&type=127&restrict=0&locale=th&key=%5BYOUR_KEY_API%5D
+                  //   Map<String, dynamic>? params = { 
+                  //     "flon": _location?.longitude,
+                  //     "flat": _location?.latitude,
+                  //     "tlon": 102.83122731601415,
+                  //     "tlat": 16.466249511152856,
+                  //     "mode": "t",
+                  //     "type": 127,
+                  //     "restrict": 0,
+                  //     "locale": "th",
+                  //     "key": "65a993de20d4de36417758d88f094ccf",
+                  //   };
+                  // var data = await dio.get("https://apix.longdo.com/RouteService/geojson/route",queryParameters: params).then((value) {
+                  //    print(value.data);
+                  //     _modelResponse = RouteModelResponse.fromJson(value.data);
+                  //  });
+                    print('---------------------------------------------------------------');
+                    // print(test);
+                    // _modelResponse = RouteModelResponse.fromJson(test);
+                    // print(_modelResponse?.data);
+                    print('---------------------------------------------------------------');
 
-                      // zoom().then((value) {
-                      //   map.currentState?.call("location", [
-                      //     {
-                      //       "lon": 102.83843421961487,
-                      //       "lat": 16.510321623038923,
-                      //     },
-                      //   ]);
-                      // });
-
-                      // map.currentState?.call("Overlays.add", [
-                      //   marker,
-                      // ]);
                     }
                   },
                   child: Text('นำทางไปศูนย์หัวใจ')),
             ),
             Positioned(
-              // padding: const EdgeInsets.all(8.0),
               bottom: 70,
               left: 10,
               child: ElevatedButton(
                   onPressed: () async {
-                    // gotolocation();
-                    // print(marker);
-                    // setState(() {
-                    //   marker;
-                    // });
                     if (marker != null) {
-                      // map.Route.placeholder(document.getElementById('result'));
-                      // map.currentState?.call("Route.placeholder");
-                      //map.Route.placeholder(document.getElementById('result'));
-                      // print('1111111111111111111111111111111');
-                      // map.currentState?.call("Route.placeholder", [
-                      //   {"document.getElementById": "result"}
-                      // ]);
-                      // print('2222222222222222222222222222222');
-                      // map.currentState?.call("Route.add", [
-                      //   {
-                      //     "lon": 102.83914888516223,
-                      //     "lat": 16.510553891600814,
-                      //   },
-                      // ]);
-                      // print('3333333333333333333333333333333');
-                      // map.currentState?.call("Route.add", [
-                      //   {
-                      //     "lon": 102.83122731601415,
-                      //     "lat": 16.466249511152856,
-                      //   },
-                      // ]);
-                      // map?.run(script: "map.Route.clearDestination()");
-                      // map?.run(script: "map.Route.clear()");
-
                       map.currentState?.call("Route.clear");
-
-                      // zoom().then((value) {
-                      //   map.currentState?.call("location", [
-                      //     {
-                      //       "lon": 102.83843421961487,
-                      //       "lat": 16.510321623038923,
-                      //     },
-                      //   ]);
-                      // });
-
-                      // map.currentState?.call("Overlays.add", [
-                      //   marker,
-                      // ]);
                     }
                   },
                   child: Text('ยกเลิกการทำทาง')),
@@ -823,26 +799,7 @@ class _MyAppState extends State<MyApp> {
       17,
       _animation,
     ]);
-    Timer.periodic(const Duration(seconds: 1), (timer) {});
+    await Timer.periodic(const Duration(seconds: 2), (timer) {});
   }
 
-  gotolocation() {}
-  void onInit(LongdoMapState map) {
-    setState(() {});
-    print('awpdokowkdopakdojnasdnjawndla;owdoa');
-    map.call(
-      "location",
-      [
-        {
-          "lon": 102.83843421961487,
-          "lat": 16.510321623038923,
-        },
-        _animation,
-      ],
-    );
-  }
-
-  void test() {
-    print('test init !!');
-  }
 }
